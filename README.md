@@ -31,8 +31,32 @@ First of all, I seperate 2 environment `prod` and `nonprod`, the next step is ab
 - `AWS_SECRET_ACCESS_KEY`
 - `AwS_SESSION_TOKEN`
 - `AWS_DEFAUTL_REGION` (us-east-1)
-- `` 
+- `GHA_RUNNER`: The shell script to allocate execution's trigger to EC2
+ 
+The workflow `aws_infra_deployment.sql` build entire AWS infrastucture and runner. In each runs, Terraform automatically compare the current state of objects to the previous state in `.tfstate` file (I put it in `s3://${{ github.event.repository.name }}-${{ inputs.environment }}`) to detect changes and apply them into relevant objects.
 
+## Bank Crawler
+
+The workflow `aws_s3_uploading` is about to crawl the logos of banks using [VietQR API](https://api.vietqr.io/v2/banks) and save into folder `.\img`
+
+Eventually, uploading entire target folder to AWS S3 bucket`
+
+Required workflow's parameters:
+
+- `enviroment`: default `nonprod`, the target AWS Account
+
+## Worldwide Weather Station Crawler
+
+This crawler call request, which is originated from [IOWA API documentation](https://mesonet.agron.iastate.edu/api/)
+
+For each `GET` request, the result is extremely large. Due to the size of data, the common I/O cannot afford. The solution is creating IO stream session and loading data chunk by chunk to avoid OOM error
+
+The pipeline `Weather Crawler` is scheduled daily at 00:00 AM to ingest data as `.csv` into folder `.\data\weather\station_weather_{current_date}.csv`, by then pushing changes to `main` branch
+
+Required workflow's parameters:
+
+- `target_folder`: default `.\data\weather`, the target folder path of successful data
+- `limit data`: default 10, the number of stations per execution, if the `limit data = 0`, do crawling over entire station id 
 
 
 
