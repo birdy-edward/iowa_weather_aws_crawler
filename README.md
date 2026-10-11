@@ -21,7 +21,7 @@ This regulation protects EC2 instances from Internet's attacks effectively becau
 **NAT Gateway** roles as a translator to convert Private IPs, which are derived by a private instance reaching out Internet, into shared **Elastic IP**. Various Private instances only require one shared **Elastic IP** to connect Internet.
 This method is especially beneficial when users do not want to explicitly define either **Security Group** or **Network ACLs** for a single traffic.
 
-![Netwoking Infrastructure](./document\ images/VPC.webp)
+![Netwoking Infrastructure](./document_images/VPC.webp)
 
 ## Self-Hosting Runner using Terraform and Github Action
 
